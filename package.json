@@ -1,0 +1,23 @@
+{
+  "name": "pgwait",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc-watch": "tsc --watch",
+    "dev-watch": "nodemon ./dist/index.js",
+    "clean": "rm -r ./dist",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/pg": "^7.14.11",
+    "pg": "^8.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "typescript": "^4.2.3"
+  }
+}
