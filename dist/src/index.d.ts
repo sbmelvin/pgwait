@@ -4,7 +4,7 @@ interface PGWaitOptions {
     database?: string;
     user?: string;
     password?: string;
-    delay?: number;
+    retry?: number;
 }
-export default function pgwait(options: PGWaitOptions): Promise<void>;
+export default function pgwait(options?: PGWaitOptions): Promise<void>;
 export {};

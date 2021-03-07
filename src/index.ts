@@ -6,32 +6,34 @@ interface PGWaitOptions {
     database?: string,
     user?: string,
     password?: string,
-    delay?: number
+    retry?: number
 }
 
 interface PGWaitDefaultOptions extends PGWaitOptions {
-    delay: number,
-    minDelay: number
+    retry: number,
+    minRetry: number
 }
 
-export default function pgwait(options: PGWaitOptions): Promise<void> {
+export default function pgwait(options?: PGWaitOptions): Promise<void> {
     const defaultOpts: PGWaitDefaultOptions = {
-        delay: 4,        // Delay in seconds
-        minDelay: 2     // Minimum allowed delay in seconds
+        retry: 4,       // Delay in seconds
+        minRetry: 2     // Minimum allowed delay in seconds
+    }    
+    
+    const opts = options ??= defaultOpts
+
+    if (!opts.retry) {
+        console.warn("options.retry not set, using default value of %d seconds.", defaultOpts.retry)
+        opts.retry ??= defaultOpts.retry
     }
 
-    if (!options.delay) {
-        console.warn("options.delay not set, using default value of %d seconds.", defaultOpts.delay)
-        options.delay ??= defaultOpts.delay
-    }
-
-    if (options.delay < defaultOpts.minDelay) {
-        console.error("options.delay cannot be lower than 2 seconds. Setting value to %d seconds.", defaultOpts.minDelay)
-        options.delay = 2
+    if (opts.retry < defaultOpts.minRetry) {
+        console.error("options.retry cannot be lower than 2 seconds. Setting value to %d seconds.", defaultOpts.minRetry)
+        opts.retry = 2
     }
 
     // setInterval expects time in milliseconds
-    options.delay *= 1000
+    opts.retry *= 1000
 
     const pool = new pg.Pool({
         host: options.host,
@@ -42,24 +44,24 @@ export default function pgwait(options: PGWaitOptions): Promise<void> {
     })
 
     const timeStamp = (): string => {
-        const d = new Date();
-        return d.toLocaleTimeString();
+        const d = new Date()
+        return d.toLocaleTimeString()
     }
     
     const printStatusMsg = (status: string): void => {
-        const statusMsg = "%s - Status: %STATUS%".replace('%STATUS%', status);
-        console.log(statusMsg, timeStamp());
+        const statusMsg = "%s - Status: %STATUS%".replace('%STATUS%', status)
+        console.log(statusMsg, timeStamp())
     }
 
     const connect = (): Promise<void> => {
         return new Promise(async (resolve, reject) => {
             try {
-                await pool.query('SELECT 1');
-                printStatusMsg('Online');
-                resolve();
+                await pool.query('SELECT 1')
+                printStatusMsg('Online')
+                resolve()
             }   
             catch (e) {
-                printStatusMsg('Offline');
+                printStatusMsg('Offline')
                 reject()
             }
         })
@@ -77,7 +79,7 @@ export default function pgwait(options: PGWaitOptions): Promise<void> {
                     clearInterval(pgInterval)
                     resolve()
                 } catch (e) {}
-            }, options.delay)
+            }, opts.retry)
         }
     })
 }

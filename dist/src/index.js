@@ -6,18 +6,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const pg_1 = __importDefault(require("pg"));
 function pgwait(options) {
     const defaultOpts = {
-        delay: 4,
-        minDelay: 2
+        retry: 4,
+        minRetry: 2
     };
-    if (!options.delay) {
-        console.warn("options.delay not set, using default value of %d seconds.", defaultOpts.delay);
-        options.delay ?? (options.delay = defaultOpts.delay);
+    const opts = options ?? (options = defaultOpts);
+    if (!opts.retry) {
+        console.warn("options.retry not set, using default value of %d seconds.", defaultOpts.retry);
+        opts.retry ?? (opts.retry = defaultOpts.retry);
     }
-    if (options.delay < defaultOpts.minDelay) {
-        console.error("options.delay cannot be lower than 2 seconds. Setting value to %d seconds.", defaultOpts.minDelay);
-        options.delay = 2;
+    if (opts.retry < defaultOpts.minRetry) {
+        console.error("options.retry cannot be lower than 2 seconds. Setting value to %d seconds.", defaultOpts.minRetry);
+        opts.retry = 2;
     }
-    options.delay *= 1000;
+    opts.retry *= 1000;
     const pool = new pg_1.default.Pool({
         host: options.host,
         port: options.port,
@@ -59,7 +60,7 @@ function pgwait(options) {
                     resolve();
                 }
                 catch (e) { }
-            }, options.delay);
+            }, opts.retry);
         }
     });
 }

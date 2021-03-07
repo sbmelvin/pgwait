@@ -7,7 +7,7 @@ const app = async () => {
         database: 'pgwait',
         user: 'postgres',
         password: 'postgres',
-        delay: 2
+        retry: 2
     });
 }
 
