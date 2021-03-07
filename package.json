@@ -1,8 +1,8 @@
 {
   "name": "pgwait",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Pauses execution until a PostgreSQL connection is available.",
+  "main": "./dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc-watch": "tsc --watch",
@@ -12,6 +12,10 @@
   },
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sbmelvin/pgwait.git"
+  },
   "dependencies": {
     "@types/pg": "^7.14.11",
     "pg": "^8.5.1"
