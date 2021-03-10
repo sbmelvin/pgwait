@@ -27,15 +27,13 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
+    "rootDir": "./src",
     "declaration": true,
     "allowUnreachableCode": false
   },
   "exclude": [
-    "node_modules",
-    "dist"
   ],
   "include": [
-    "./src",
-    "./tests"
+    "./src/**/*.ts"
   ]
 }
