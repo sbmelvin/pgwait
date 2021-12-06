@@ -42,6 +42,10 @@ export default function pgwait(options?: PGWaitOptions): Promise<void> {
         user: options.user,
         password: options.password
     })
+    
+    const clean = async (): Promise<void> => {
+        await pool.end()
+    }
 
     const timeStamp = (): string => {
         const d = new Date()
@@ -58,6 +62,7 @@ export default function pgwait(options?: PGWaitOptions): Promise<void> {
             try {
                 await pool.query('SELECT 1')
                 printStatusMsg('Online')
+                await clean()
                 resolve()
             }   
             catch (e) {
