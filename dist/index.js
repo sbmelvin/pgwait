@@ -26,6 +26,9 @@ function pgwait(options) {
         user: options.user,
         password: options.password
     });
+    const clean = async () => {
+        await pool.end();
+    };
     const timeStamp = () => {
         const d = new Date();
         return d.toLocaleTimeString();
@@ -39,6 +42,7 @@ function pgwait(options) {
             try {
                 await pool.query('SELECT 1');
                 printStatusMsg('Online');
+                await clean();
                 resolve();
             }
             catch (e) {
